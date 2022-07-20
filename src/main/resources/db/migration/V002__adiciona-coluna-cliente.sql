@@ -1,0 +1,1 @@
+alter table cliente add column id_sexo varchar(1) null;
