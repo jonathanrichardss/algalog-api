@@ -2,6 +2,7 @@ package com.algaworks.algalog.api.controller;
 
 import com.algaworks.algalog.domain.model.Cliente;
 import com.algaworks.algalog.domain.repository.ClienteRepository;
+import com.algaworks.algalog.domain.service.CatalogoClienteService;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.rsocket.context.RSocketPortInfoApplicationContextInitializer;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,8 @@ public class ClienteController {
 
     private ClienteRepository clienteRepository;
 
+    private CatalogoClienteService catalogoClienteService;
+
     @GetMapping
     public List<Cliente> listar() {
         return clienteRepository.findAll();
@@ -29,14 +32,14 @@ public class ClienteController {
     @GetMapping("/{id}")
     public ResponseEntity<Cliente> buscar(@PathVariable UUID id) {
         return clienteRepository.findById(id)
-                .map(cliente -> ResponseEntity.ok(cliente))
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cliente adicionar(@Valid @RequestBody Cliente cliente) {
-        return clienteRepository.save(cliente);
+        return catalogoClienteService.salvar(cliente);
     }
 
     @PutMapping("/{clienteId}")
@@ -58,7 +61,7 @@ public class ClienteController {
            return ResponseEntity.notFound().build();
         }
 
-        clienteRepository.deleteById(clienteId);
+        catalogoClienteService.excluir(clienteId);
 
         return ResponseEntity.noContent().build();
     }
