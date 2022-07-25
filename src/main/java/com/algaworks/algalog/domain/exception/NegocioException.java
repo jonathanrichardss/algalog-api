@@ -4,5 +4,7 @@ public class NegocioException extends RuntimeException{
 
     private static final long serialVersioUID = 1L;
 
-
+    public NegocioException(String message) {
+        super(message);
+    }
 }
